@@ -163,7 +163,8 @@ class Window extends JFrame implements ActionListener, ChangeListener {
         Object s= e.getSource();
         if (s == toolSizeSlider) {
             // TODO: #01. Implement me!
-
+        	canvas.setToolSize(toolSizeSlider.getValue());
+        	
         } else {
             System.err.println("stateChanged: " + s);
         }
@@ -175,7 +176,9 @@ class Window extends JFrame implements ActionListener, ChangeListener {
         // The image is in a field in class Canvas.
         // You have to retrieve the image to get its width and height.
         // A field of class Window gives you a pointer to the Canvas object.
-
+    	BufferedImage img = canvas.getImg();
+    	lastImgWidth = img.getWidth();
+    	lastImgHeight = img.getHeight();
         
     }
 
@@ -315,8 +318,14 @@ class Window extends JFrame implements ActionListener, ChangeListener {
      * to be used as an icon for the foreground/background color buttons.  */
     private static ImageIcon getIcon(Color c, int size) {
         // TODO: #03. Implement me!
-
-        return null;
+    	BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_CUSTOM);
+    	int rgb = c.getRGB();
+    	for(int i=0; i<size; i++) {
+    		for(int j=0; j<size; j++) {
+    			img.setRGB(i, j, rgb);
+    		}
+    	}
+        return new ImageIcon(img);
     }
 
     /** Process event e from the toolbar */
