@@ -164,7 +164,7 @@ class Window extends JFrame implements ActionListener, ChangeListener {
         if (s == toolSizeSlider) {
             // TODO: #01. Implement me!
         	canvas.setToolSize(toolSizeSlider.getValue());
-        	
+        	toolSizeLabel.setText("Tool Size: " + canvas.getToolSize());
         } else {
             System.err.println("stateChanged: " + s);
         }
@@ -179,6 +179,7 @@ class Window extends JFrame implements ActionListener, ChangeListener {
     	BufferedImage img = canvas.getImg();
     	lastImgWidth = img.getWidth();
     	lastImgHeight = img.getHeight();
+    	sizeLabel.setText("Image : " + lastImgWidth + " x " + lastImgHeight);
         
     }
 
@@ -318,7 +319,7 @@ class Window extends JFrame implements ActionListener, ChangeListener {
      * to be used as an icon for the foreground/background color buttons.  */
     private static ImageIcon getIcon(Color c, int size) {
         // TODO: #03. Implement me!
-    	BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_CUSTOM);
+    	BufferedImage img = new BufferedImage(size, size, 1);
     	int rgb = c.getRGB();
     	for(int i=0; i<size; i++) {
     		for(int j=0; j<size; j++) {
@@ -355,6 +356,10 @@ class Window extends JFrame implements ActionListener, ChangeListener {
             Color newColor= JColorChooser.showDialog(
                     this,"Foreground Color", canvas.foreGroundColor());
             // TODO: #04. Implement me!
+            if(newColor!=null) {
+            	canvas.setForeGroundColor(newColor);
+            	updateForeColor();
+            }
 
             return; // Don't delete this return
         }
@@ -363,6 +368,10 @@ class Window extends JFrame implements ActionListener, ChangeListener {
                     this,"Background Color", canvas.backGroundColor());
             // TODO: #05. Implement me!
             if (backColorButton == null) return;
+            if(newBackColor!=null) {
+	            canvas.setBackGroundColor(newBackColor);
+	            updateBackColor();
+            }
 
             return; // Don't delete this return
         }
