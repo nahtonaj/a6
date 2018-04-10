@@ -234,6 +234,8 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
     	//g2d.draw(new Rectangle(x - toolSize/2, y - toolSize/2, toolSize, toolSize));
     	g2d.fill(new Rectangle(x - toolSize/2, y - toolSize/2, toolSize, toolSize));
     	repaint();
+    	revalidate();
+    	window.setImageUnsaved();
     }
     
     /** Draws a line with color c and stroke toolSize from
@@ -245,6 +247,8 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
     	g2d.setStroke(new BasicStroke(toolSize));
     	g2d.drawLine((int) mousePosPrev.x, (int) mousePosPrev.y, (int) mousePos.x, (int) mousePos.y);
     	repaint();
+    	revalidate();
+    	window.setImageUnsaved();
     }
     
     /** Airbrush with the current foreground color in a square of size
@@ -255,7 +259,20 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
      */
     private void airBrush(Graphics2D g2d, Color c) {
     	// TODO #9 implement me!
-    	
+    	g2d.setColor(c);
+    	for(int i = 0; i < toolSize; i++) {
+    		for(int j = 0; j < toolSize; j++) {
+    			if(Math.pow(i - (toolSize/2),2) + 
+    					Math.pow(j - (toolSize/2), 2)
+    					> Math.pow(toolSize/2, 2))
+    				continue;
+    			if (random.nextDouble() > 0.75)
+    				g2d.fillRect((int)mousePos.x - (toolSize/2) + i, (int)mousePos.y - (toolSize/2) + j, 1, 1);
+    		}
+    	}
+    	window.setImageUnsaved();
+    	repaint();
+    	revalidate();
     }
     
 
@@ -291,7 +308,16 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
             // this IS the first mouse press; record it.
             // If one has already been made, this is the second mouse press;
             // draw the line.
-
+            if(!pointPressed) {
+            	pointPressed = true;
+            	firstPoint = mousePos;
+            }
+            
+            else {
+            	mousePosPrev = firstPoint;
+            	colorDrag(g2d, foreColor);
+            	pointPressed = false;
+            }
         }
         else if (activeTool == Tool.AIRBRUSH) {
             System.out.println("mousePressed: airbrush");
@@ -350,7 +376,9 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
         // TODO #10b. Implement me!
         // If the active tool is the Line  and the first mouse 
         // press has been recognized,  repaint().
-
+    	if(activeTool == Tool.LINE && pointPressed) {
+    		repaint();
+    	}
     }
     
     /** Paint this component using g. */
@@ -375,7 +403,12 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
         // TODO: #10c. Implement me!
         // If the active tool is the LINE and the first point has been pressed,
         // draw the line on g2d using the foreColor and toolSize.
-
+        if(activeTool == Tool.LINE && pointPressed) {
+        	mousePosPrev = firstPoint;
+        	g2d.setColor(foreColor);
+        	g2d.setStroke(new BasicStroke(toolSize));
+        	g2d.drawLine((int) mousePosPrev.x, (int) mousePosPrev.y, (int) mousePos.x, (int) mousePos.y);
+        }
 
     }
 
