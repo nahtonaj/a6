@@ -154,8 +154,8 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
         
         // Passes current mouse position to window
         // TODO #06 Implement me!
-
-
+        this.window.setMousePosition((int) mousePos.x, (int) mousePos.y);
+        
         // Draws temporary line 
         drawTempLine(e);
 
@@ -229,7 +229,11 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
     	 */
     private void colorClick(Graphics2D g2d, Color c, int x, int y) {
     	// TODO #07 Implement me!
-
+    	g2d.setColor(c);
+    	//g2d.setPaint(c);
+    	//g2d.draw(new Rectangle(x - toolSize/2, y - toolSize/2, toolSize, toolSize));
+    	g2d.fill(new Rectangle(x - toolSize/2, y - toolSize/2, toolSize, toolSize));
+    	repaint();
     }
     
     /** Draws a line with color c and stroke toolSize from
@@ -237,7 +241,10 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
      */
     private void colorDrag(Graphics2D g2d, Color c) {
     	// TODO #08 Implement me!
-
+    	g2d.setColor(c);
+    	g2d.setStroke(new BasicStroke(toolSize));
+    	g2d.drawLine((int) mousePosPrev.x, (int) mousePosPrev.y, (int) mousePos.x, (int) mousePos.y);
+    	repaint();
     }
     
     /** Airbrush with the current foreground color in a square of size
@@ -248,7 +255,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
      */
     private void airBrush(Graphics2D g2d, Color c) {
     	// TODO #9 implement me!
-
+    	
     }
     
 
@@ -319,7 +326,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (activeTool == Tool.PENCIL) {
-        		colorDrag(g2d,foreGroundColor());
+        	colorDrag(g2d,foreGroundColor());
 
         }
         else if (activeTool == Tool.ERASER) {
